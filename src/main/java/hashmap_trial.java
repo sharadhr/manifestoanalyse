@@ -1,7 +1,11 @@
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class hashmap_trial {
+    String[] words;
     HashMap<String, Integer> word_count = new HashMap<String, Integer>();
     HashMap<String, Integer> pronouns = new HashMap<String, Integer>();
     HashMap<String, Integer> prepositions = new HashMap<String, Integer>();
@@ -10,8 +14,9 @@ public class hashmap_trial {
     HashMap<String, Integer> articles = new HashMap<String, Integer>();
 
     
-    public hashmap_trial(String text){
+    public hashmap_trial(final String[] text){
         init_word_cat();
+        words = text;
     }
 
     private void init_word_cat(){
@@ -38,7 +43,7 @@ public class hashmap_trial {
         articles.put("a", 0); articles.put("an", 0); articles.put("the", 0); articles.put("whose", 0); quantifiers.put("all", 0); 
     }
 
-    public void put_word(String text){
+    private void put_word(String text){
         text = text.toLowerCase();
         if(word_count.containsKey(text) == true){
             word_count.put(text, word_count.get(text) + 1);
@@ -61,6 +66,15 @@ public class hashmap_trial {
         else if(articles.containsKey(text)){
             articles.put(text, articles.get(text) + 1);
         }
-        
+
+    }
+
+    public HashMap<String, Integer> returnWordcount(){
+        for(int i = 0; i < this.words.length; i++){
+            final String current_word = this.words[i];
+            put_word(current_word);
+        }
+        final HashMap<String, Integer> out = word_count.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue)->oldValue, LinkedHashMap::new));
+        return out;
     }
 }
