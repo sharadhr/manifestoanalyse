@@ -46,7 +46,21 @@ public class hashmap_trial {
         else{
             word_count.put(text, 1);
         }
+        if(pronouns.containsKey(text) == true){
+            pronouns.put(text, pronouns.get(text) + 1);
+        }
+        else if(prepositions.containsKey(text) == true){
+            prepositions.put(text, prepositions.get(text) + 1);
+        }
+        else if(conjunctions.containsKey(text) == true){
+            conjunctions.put(text, conjunctions.get(text) + 1);
+        }
+        else if(quantifiers.containsKey(text) == true){
+            quantifiers.put(text, quantifiers.get(text) + 1);
+        }
+        else if(articles.containsKey(text)){
+            articles.put(text, articles.get(text) + 1);
+        }
+        
     }
-
-    
 }
