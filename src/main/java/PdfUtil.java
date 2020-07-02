@@ -1,17 +1,14 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.util.Scanner;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
- * ImportPdf
+ * PdfUtil
  */
-public class ImportPdf {
+public class PdfUtil {
 
     /**
      * 
@@ -37,10 +34,27 @@ public class ImportPdf {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public static String getPdfPath() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter PDF path:");
         return scanner.nextLine();
+    }
+
+    /**
+     * 
+     * @param pdf
+     */
+    public static String parsePdfFromDoc(PDDocument pdfdoc) {
+        try {
+            return new PDFTextStripper().getText(pdfdoc);
+        } catch (IOException e) {
+            System.err.println("Failed to read text. Returning empty string.");
+            return "";
+        }
     }
 }
