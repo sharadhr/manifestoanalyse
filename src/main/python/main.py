@@ -5,9 +5,9 @@ import nltk
 
 nltk.download('tagset')
 nltk.download('wordnet')
+nltk.download('punkt')
 
 lemmatizer = nltk.stem.WordNetLemmatizer()
-
 
 # CC coordinating conjunction
 # CD cardinal digit
@@ -91,7 +91,6 @@ class Word:
     def get_word(self):
         return self.word
 
-
 def pronoungen():
     d = {}
     pronoun_list = ["i", "me", "mine", "myself",
@@ -106,7 +105,6 @@ def pronoungen():
         d[i] = 0
     return d
 
-
 def prepositiongen():
     d = {}
     prep_list = ["in", "on", "at", "for", "by", "from", "with",
@@ -114,7 +112,6 @@ def prepositiongen():
     for i in prep_list:
         d[i] = 0
     return d
-
 
 def conjunctiongen():
     d = {}
@@ -124,7 +121,6 @@ def conjunctiongen():
         d[i] = 0
     return d
 
-
 def quantifergen():
     d = {}
     quant = ["many", "few", "some", "every", "a lot", "any", "less", "fewer"]
@@ -132,14 +128,12 @@ def quantifergen():
         d[i] = 0
     return d
 
-
 def articlegen():
     d = {}
     article = ["a", "an", "the", "whose", "all"]
     for i in article:
         d[i] = 0
     return d
-
 
 def keywordgen():
     d = {}
@@ -153,14 +147,12 @@ def keywordgen():
         d[i] = 0
     return d
 
-
 def read_textfile(file_name):
     text_file = open(file_name, "r")
     text = text_file.read()
     text_file.close()
 
     return nltk.pos_tag(nltk.word_tokenize(text))
-
 
 def objectifier(text):
     out = []
@@ -169,7 +161,6 @@ def objectifier(text):
         id = text[i][1]
         out.append(Word(word, id))
     return out
-
 
 def get_wordcat(words):
     word_dict = {}
@@ -186,7 +177,6 @@ def get_wordcat(words):
                 word_dict[description_list[j]].append(i)
     return word_dict
 
-
 def get_freq(word_dicts):
     d = {}
     for i in word_dicts:
@@ -200,7 +190,6 @@ def get_freq(word_dicts):
         d[i] = temp
     return d
 
-
 def arrangexy(d):
     x = []
     y = []
@@ -210,14 +199,6 @@ def arrangexy(d):
     out = pd.DataFrame({"Words": x, "Frequency": y})
     out.sort_values(by="Frequency", ascending=False, inplace=True)
     return out
-
-
-def d_arrange(l):
-    out = []
-    for i in l:
-        out.append(arrangexy(i))
-    return out
-
 
 def main():
     #worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
@@ -230,7 +211,8 @@ def main():
     data_frames = []
     for i in freq_words:
         current_dict = freq_words[i]
-        data_frames.append(d_arrange(current_dict)) #creates data frames for the frequency of words and the words
+        data_frames.append(arrangexy(current_dict)) #creates data frames for the frequency of words and the words
+    print(data_frames)
     # for i in data_frames:
     #     # ax = i.plot.bar(x = "Words", y = "Frequency")
     #     #plt.show()
