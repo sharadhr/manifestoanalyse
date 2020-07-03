@@ -1,6 +1,26 @@
 import re as r
 import pandas as pd
-import main.python.word as Word
+
+class Word:
+    def __init__(self, word):
+        self.word = word
+        self.wordtype = None
+
+    def word_add(self, d, s): #d is dictionary of all words. s is list of words and word type
+        text = self.word
+        if text not in s[0]:
+            if text in d:
+                d[text] += 1
+            else:
+                d[text] = 1
+        for i in range(0, len(s[0])):
+            current_data = s[0][i]
+            if text in current_data:
+                current_data[text] += 1
+                self.type = s[1][i]
+    
+    def showtype(self):
+        return self.type
 
 def pronoungen():
     d = {}
@@ -8,7 +28,7 @@ def pronoungen():
     "you", "your", "yourself", 
     "he", "him", "his", "himself", 
     "she", "her", "hers", "herself",
-    "it", "its", "it's", "itself",
+    "it", "its", "itself",
     "we", "ours", "us", "our", "ourselves",
     "yourselves",
     "they", "them", "their", "theirs", "theirs", "themselves"]
@@ -46,7 +66,7 @@ def articlegen():
 
 def keywordgen():
     d = {}
-    keyword = ["productivity", "w", "enterprise", "gdp", "economy",
+    keyword = ["productivity", "enterprise", "gdp", "economy",
     "mobility", "pmet", "jobs", "minimum wage", "cpf", "local", "singaporeans",
     "elderly", "eldercare", "poverty", "income", "tradeoff", "deficit",
     "stimulus", "invest", "investment", "invested", "population",
@@ -60,7 +80,7 @@ def textfile(name):
     text_file = open(name, "r")
     text = text_file.read()
     text_file.close()
-    sorted_text = r.split("\W+", text)
+    sorted_text = r.split("\W+", text.lower())
     return sorted_text
 
 def sorter(sorted_text, d, s):
@@ -78,6 +98,7 @@ def arrangexy(d):
         x.append(i)
         y.append(d[i])
     out = pd.DataFrame({"Words":x, "Frequency": y})
+    out.sort_values(by = "Frequency", ascending = False, inplace = True)
     return out
 
 def d_arrange(l):
@@ -90,11 +111,13 @@ def main():
     total_words = {}
     worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
-    name = input("enter file name: ")
+    name = "nsp.txt"
     sorted_text = textfile(name)
     word_obj = sorter(sorted_text, total_words, [worddatabase, wordassignment])
-    data_frames = d_arrange(worddatabase.append(total_words))
+    worddatabase.append(total_words)
+    data_frames = d_arrange(worddatabase)
     for i in data_frames:
         ax = i.plot.bar(x = "Words", y = "Frequency")
+        print(i,"\n")
 
 main()
