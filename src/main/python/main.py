@@ -1,10 +1,9 @@
 import re as r
 import pandas as pd
 import matplotlib.pyplot as plt
-from nltk.corpus import wordnet
-from nltk.stem import WordNetLemmatizer
+import nltk
 
-lemmatizer = WordNetLemmatizer()
+lemmatizer = nltk.stem.WordNetLemmatizer()
 
 
 # CC coordinating conjunction
@@ -90,9 +89,9 @@ class Word:
 
 def pronoungen():
     d = {}
-    pronoun_list = ["i", "me", "mine", "myself", 
-    "you", "your", "yourself", 
-    "he", "him", "his", "himself", 
+    pronoun_list = ["i", "me", "mine", "myself",
+    "you", "your", "yourself",
+    "he", "him", "his", "himself",
     "she", "her", "hers", "herself",
     "it", "its", "itself",
     "we", "ours", "us", "our", "ourselves",
@@ -104,7 +103,7 @@ def pronoungen():
 
 def prepositiongen():
     d = {}
-    prep_list = ["in", "on", "at", "for", "by", "from", "with", "to", "about", "below", "over", "above", "of", "after"] 
+    prep_list = ["in", "on", "at", "for", "by", "from", "with", "to", "about", "below", "over", "above", "of", "after"]
     for i in prep_list:
         d[i] = 0
     return d
@@ -124,7 +123,7 @@ def quantifergen():
     return d
 
 def articlegen():
-    d = {} 
+    d = {}
     article = ["a", "an", "the", "whose", "all"]
     for i in article:
         d[i] = 0
@@ -136,18 +135,18 @@ def keywordgen():
     "mobility", "pmet", "jobs", "minimum wage", "cpf", "local", "singaporeans",
     "elderly", "eldercare", "poverty", "income", "tradeoff", "deficit",
     "stimulus", "invest", "investment", "invested", "population",
-    "privelege", "mandate", "scheme", "monopoly", "retrenchment", 
+    "privelege", "mandate", "scheme", "monopoly", "retrenchment",
     "retrenched", "budget", "national", "government", "pap", "nsp", "wp", "psp", "sdp", "spp"]
     for i in keyword:
         d[i] = 0
     return d
 
-def textfile(name):
-    text_file = open(name, "r")
+def read_textfile(file_name):
+    text_file = open(file_name, "r")
     text = text_file.read()
     text_file.close()
-    sorted_text = r.split("\W+", text.lower())
-    return sorted_text
+    tokens = nltk.word_tokenize(text)
+    print(nltk.pos_tag(nltk.word_tokenize(text)))
 
 def sorter(sorted_text, d, s):
     text_obj = []
@@ -177,14 +176,15 @@ def main():
     total_words = {}
     worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
-    name = "nsp.txt"
-    sorted_text = textfile(name)
+    
+    file_name = "nsp.txt"
+    sorted_text = read_textfile(file_name)
     word_obj = sorter(sorted_text, total_words, [worddatabase, wordassignment])
     worddatabase.append(total_words)
     data_frames = d_arrange(worddatabase)
-    for i in data_frames:
-        ax = i.plot.bar(x = "Words", y = "Frequency")
-        #plt.show()
-        print(i, "\n")
+    # for i in data_frames:
+    #     # ax = i.plot.bar(x = "Words", y = "Frequency")
+    #     #plt.show()
+    #     # print(i, "\n")
 
-# main()
+main()
