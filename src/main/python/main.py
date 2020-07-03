@@ -58,34 +58,19 @@ def get_wordnet_pos(words):
     return word_dict
 
 class Word:
-    def __init__(self, word):
+    def __init__(self, word, id):
         self.word = word
-        self.wordtype = None
-        #self.word = word[0]
-        #self.type_l = word[1]
-        #self.type_s = word[1][0]
-
-    def word_add(self, d, s): #d is dictionary of all words. s is list of words and word type
-        check = False
-        text = self.word
-        for i in range(0, len(s[0])):
-            current_data = s[0][i]
-            if text in current_data:
-                current_data[text] += 1
-                self.type = s[1][i]
-                check = True
-        if text not in s[0] and check == False:
-            if text in d:
-                d[text] += 1
-            else:
-                d[text] = 1
+        self.type_l = id
+        self.type_s = id[0]
 
     def get_type_s(self):
         return self.type_s
 
     def get_type_l(self):
         return self.type_l
-
+    
+    def get_word(self):
+        return self.word
 
 def pronoungen():
     d = {}
@@ -148,13 +133,40 @@ def read_textfile(file_name):
     
     return nltk.pos_tag(nltk.word_tokenize(text))
 
-def sorter(sorted_text, d, s):
-    text_obj = []
-    for i in sorted_text:
-        current_obj = Word(lemmatizer.lemmatize(i, "v"))
-        current_obj.word_add(d, s)
-        text_obj.append(current_obj)
-    return text_obj
+def objectifier(text):
+    out = []
+    for i in range(0,len(text)):
+        word = text[i][0].lower
+        id = text[i][1]
+        out.append(Word(word, id))
+    return out
+
+def get_wordcat(words):
+    word_dict = {}
+    id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"]
+    description_list = ["Conjunction or Digit", "Determiner", "Existential there", "Foreign word",
+    "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To",
+    "Interjection", "Verb", "WH words"]
+    for i in description_list:
+        word_dict[i] = []
+    for i in words:
+        for j in range(0,len(id_list)):
+            if i.get_type_s == id_list[j]:
+                word_dict[description_list[j]].append(i)
+    return word_dict
+
+def get_freq(word_dicts):
+    d = {}
+    for i in word_dicts:
+        temp = {}
+        current = word_dicts[i]
+        for j in current:
+            if j.get_word() in temp:
+                temp[j.get_word()] += 1
+            else:
+                temp[j.get_word()] = 1
+        d[i] = temp
+    return d
 
 def arrangexy(d):
     x = []
@@ -178,8 +190,11 @@ def main():
     wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
 
     file_name = "nsp.txt"
-    sorted_text = read_textfile(file_name)
-    word_obj = sorter(sorted_text, total_words, [worddatabase, wordassignment])
+    text_tags = read_textfile(file_name)
+    word_obj = objectifier(text_tags)
+    cat_words = get_wordcat(word_obj)
+    freq_words = get_freq(cat_words)
+
     worddatabase.append(total_words)
     data_frames = d_arrange(worddatabase)
     # for i in data_frames:
