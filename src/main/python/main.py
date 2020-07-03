@@ -177,7 +177,6 @@ def arrangexy(d):
     return out
 
 # See first few methods for nice formatting, built-in nltk processing, etc. 
-
 def main():
     #worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     #wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
