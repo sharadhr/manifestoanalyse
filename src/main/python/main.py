@@ -42,12 +42,12 @@ lemmatizer = nltk.stem.WordNetLemmatizer()
 # WP$ possessive wh-pronoun whose
 # WRB wh-abverb where, when
 
-# 
+#
 def get_wordnet_pos(words):
     word_dict = {}
-    id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"] 
+    id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"]
     description_list = ["Conjunction or Digit", "Determiner", "Existential there", "Foreign word",
-    "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To", 
+    "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To",
     "Interjection", "Verb", "WH words"]
     for i in description_list:
         word_dict[i] = []
@@ -84,7 +84,7 @@ class Word:
         return self.type_s
 
     def get_type_l(self):
-        return self.type_l    
+        return self.type_l
 
 
 def pronoungen():
@@ -145,8 +145,8 @@ def read_textfile(file_name):
     text_file = open(file_name, "r")
     text = text_file.read()
     text_file.close()
-    tokens = nltk.word_tokenize(text)
-    print(nltk.pos_tag(nltk.word_tokenize(text)))
+    
+    return nltk.pos_tag(nltk.word_tokenize(text))
 
 def sorter(sorted_text, d, s):
     text_obj = []
@@ -176,7 +176,7 @@ def main():
     total_words = {}
     worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
-    
+
     file_name = "nsp.txt"
     sorted_text = read_textfile(file_name)
     word_obj = sorter(sorted_text, total_words, [worddatabase, wordassignment])
