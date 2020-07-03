@@ -1,5 +1,6 @@
-import csv as c
 import re as r
+import pandas as pd
+import main.python.word as Word
 
 def pronoungen():
     d = {}
@@ -55,8 +56,45 @@ def keywordgen():
         d[i] = 0
     return d
 
+def textfile(name):
+    text_file = open(name, "r")
+    text = text_file.read()
+    text_file.close()
+    sorted_text = r.split("\W+", text)
+    return sorted_text
+
+def sorter(sorted_text, d, s):
+    text_obj = []
+    for i in sorted_text:
+        current_obj = Word(i)
+        current_obj.word_add(d, s)
+        text_obj.append(current_obj)
+    return text_obj
+
+def arrangexy(d):
+    x = []
+    y = []
+    for i in d:
+        x.append(i)
+        y.append(d[i])
+    out = pd.DataFrame({"Words":x, "Frequency": y})
+    return out
+
+def d_arrange(l):
+    out = []
+    for i in l:
+        out.append(arrangexy(i))
+    return out
+
 def main():
-    d = {}
+    total_words = {}
     worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
-    
+    name = input("enter file name: ")
+    sorted_text = textfile(name)
+    word_obj = sorter(sorted_text, total_words, [worddatabase, wordassignment])
+    data_frames = d_arrange(worddatabase.append(total_words))
+    for i in data_frames:
+        ax = i.plot.bar(x = "Words", y = "Frequency")
+
+main()
