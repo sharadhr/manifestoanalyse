@@ -202,14 +202,14 @@ def main():
     #worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
     #wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
     file_name = "nsp.txt"
-    text_tags = read_textfile(file_name)
-    word_obj = objectifier(text_tags)
-    cat_words = get_wordcat(word_obj)
-    freq_words = get_freq(cat_words)
+    text_tags = read_textfile(file_name) #list of tuples containing the words contained in the text document along with their NLKT ID's
+    word_obj = objectifier(text_tags) #list of word objects for the words obtained from the previous step
+    cat_words = get_wordcat(word_obj) #sorts the words into a dictionary with their correct categories 
+    freq_words = get_freq(cat_words) #sorts the words by frequency and returns a dictionary
     data_frames = []
     for i in freq_words:
         current_dict = freq_words[i]
-        data_frames.append(d_arrange(current_dict)) 
+        data_frames.append(d_arrange(current_dict)) #creates data frames for the frequency of words and the words
     # for i in data_frames:
     #     # ax = i.plot.bar(x = "Words", y = "Frequency")
     #     #plt.show()
