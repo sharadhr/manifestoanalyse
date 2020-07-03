@@ -1,5 +1,6 @@
 import re as r
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Word:
     def __init__(self, word):
@@ -118,6 +119,7 @@ def main():
     data_frames = d_arrange(worddatabase)
     for i in data_frames:
         ax = i.plot.bar(x = "Words", y = "Frequency")
+        plt.show()
         print(i,"\n")
 
 main()
