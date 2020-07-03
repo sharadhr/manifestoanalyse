@@ -1,7 +1,8 @@
-class Word():
+class Word:
     def __init__(self, word):
         self.word = word
-        self.worddatabase = [__pronoungen(), __pronoungen(), __prepositiongen(), __conjunctiongen(), __quantifergen(), __articlegen()]
+        self.worddatabase = [__pronoungen(), __prepositiongen(), __conjunctiongen(), __quantifergen(), __articlegen(), __keywordgen()]
+        self.wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
     
     def __pronoungen(self):
         d = {}
@@ -39,12 +40,24 @@ class Word():
         self.quantifiers = d
 
     def __articlegen(self):
-        d = {}
-        #articles.put("a", 0); articles.put("an", 0); articles.put("the", 0); articles.put("whose", 0); quantifiers.put("all", 0); 
+        d = {} 
         article = ["a", "an", "the", "whose", "all"]
         for i in article:
             d[i] = 0
         self.articles = d
+    
+    def __keywordgen(self):
+        d = {}
+        keyword = ["productivity", "w", "enterprise", "gdp", "economy",
+        "mobility", "pmet", "jobs", "minimum wage", "cpf", "local", "singaporeans",
+        "elderly", "eldercare", "poverty", "income", "tradeoff", "deficit",
+        "stimulus", "invest", "investment", "invested", "population",
+        "privelege", "mandate", "scheme", "monopoly", "retrenchment", 
+        "retrenched", "budget"]
+        for i in keyword:
+            d[i] = 0
+        self.keywords = d
+
 
     def word_add(self, text):
         d = {} #dictionary of all words
@@ -55,4 +68,6 @@ class Word():
         for i in range(0, len(self.worddatabase)):
             current_data = self.worddatabase[i]
             if text in current_data:
-                current_data[text] += 1 
+                current_data[text] += 1
+                self.type = self.wordassignment[i] 
+    
