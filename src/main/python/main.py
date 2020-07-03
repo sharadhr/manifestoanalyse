@@ -44,13 +44,19 @@ lemmatizer = WordNetLemmatizer()
 # WRB wh-abverb where, when
 
 # 
-def get_wordnet_pos(word):
-    tag = nltk.pos_tag([word])[0][1][0].upper()
-    tag_dict = {"J": wordnet.ADJ,
-                "N": wordnet.NOUN,
-                "V": wordnet.VERB,
-                "R": wordnet.ADV}
+def get_wordnet_pos(words):
+    word_dict = {}
     id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"] 
+    description_list = ["Conjunction or Digit", "Determiner", "Existential there", "Foreign word",
+    "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To", 
+    "Interjection", "Verb", "WH words"]
+    for i in description_list:
+        word_dict[i] = []
+    for i in words:
+        for j in range(0,len(id_list)):
+            if i.get_type_s == id_list[j]:
+                word_dict[description_list[j]].append(i)
+
     tag_dict = {"CC": [], "CD": [], "D": [], "E": [], "F": [], "I": [], }
     return tag_dict.get(tag, wordnet.NOUN)
 
@@ -77,7 +83,6 @@ class Word:
             else:
                 d[text] = 1
 
-    
     def get_type_s(self):
         return self.type_s
 
