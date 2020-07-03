@@ -3,6 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
 
+nltk.download('tagset')
+nltk.download('wordnet')
+
 lemmatizer = nltk.stem.WordNetLemmatizer()
 
 
@@ -42,7 +45,18 @@ lemmatizer = nltk.stem.WordNetLemmatizer()
 # WP$ possessive wh-pronoun whose
 # WRB wh-abverb where, when
 
-#
+
+def nltk_tagdict():
+    tagdict = nltk.data.load('help/tagsets/upenn_tagset.pickle')
+    tagdict.values()
+    return nltk.data.load('help/tagsets/upenn_tagset.pickle')
+
+def nltk_tags(tagdict):
+    return tagdict.keys()
+
+def nltk_tag_explanations(tagdict):
+    return tagdict.values();
+
 def get_wordnet_pos(words):
     word_dict = {}
     id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"]
@@ -130,7 +144,7 @@ def read_textfile(file_name):
     text_file = open(file_name, "r")
     text = text_file.read()
     text_file.close()
-    
+
     return nltk.pos_tag(nltk.word_tokenize(text))
 
 def objectifier(text):
