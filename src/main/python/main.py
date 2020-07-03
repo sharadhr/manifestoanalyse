@@ -50,15 +50,17 @@ def get_wordnet_pos(word):
                 "N": wordnet.NOUN,
                 "V": wordnet.VERB,
                 "R": wordnet.ADV}
-
+    id_list = ["C", "D", "E", "F", "I", "J", "L", "M", "N", "P", "R", "T", "U", "V", "W"] 
+    tag_dict = {"CC": [], "CD": [], "D": [], "E": [], "F": [], "I": [], }
     return tag_dict.get(tag, wordnet.NOUN)
-
-
 
 class Word:
     def __init__(self, word):
         self.word = word
         self.wordtype = None
+        #self.word = word[0]
+        #self.type_l = word[1]
+        #self.type_s = word[1][0]
 
     def word_add(self, d, s): #d is dictionary of all words. s is list of words and word type
         check = False
@@ -76,8 +78,12 @@ class Word:
                 d[text] = 1
 
     
-    def showtype(self):
-        return self.type
+    def get_type_s(self):
+        return self.type_s
+
+    def get_type_l(self):
+        return self.type_l    
+
 
 def pronoungen():
     d = {}
