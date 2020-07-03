@@ -3,9 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
 
+nltk.download('popular')
 nltk.download('tagset')
 nltk.download('wordnet')
-nltk.download('punkt')
 
 lemmatizer = nltk.stem.WordNetLemmatizer()
 
@@ -136,8 +136,9 @@ def get_wordcat(words):
         word_dict[i] = []
     for i in words:
         for j in range(0, len(id_list)):
-            if i.get_type_s == id_list[j]:
+            if i.get_type_s() == id_list[j]:
                 word_dict[description_list[j]].append(i)
+            print(word_dict)
     return word_dict
 
 def get_freq(word_dicts):
@@ -157,6 +158,7 @@ def arrangexy(d):
     x = []
     y = []
     for i in d:
+        print(i.get_word())
         x.append(i)
         y.append(d[i])
     out = pd.DataFrame({"Words": x, "Frequency": y})
@@ -169,13 +171,13 @@ def main():
     file_name = "nsp.txt"
     text_tags = read_textfile(file_name) #list of tuples containing the words contained in the text document along with their NLKT ID's
     word_obj = objectifier(text_tags) #list of word objects for the words obtained from the previous step
-    cat_words = get_wordcat(word_obj) #sorts the words into a dictionary with their correct categories 
+    cat_words = get_wordcat(word_obj) #sorts the words into a dictionary with their correct categories
     freq_words = get_freq(cat_words) #sorts the words by frequency and returns a dictionary
     data_frames = []
     for i in freq_words:
         current_dict = freq_words[i]
+        #print(current_dict, "\n")
         data_frames.append(arrangexy(current_dict)) #creates data frames for the frequency of words and the words
-    print(data_frames)
     # for i in data_frames:
     #     # ax = i.plot.bar(x = "Words", y = "Frequency")
     #     #plt.show()
