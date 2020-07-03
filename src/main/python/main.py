@@ -1,6 +1,11 @@
 import re as r
 import pandas as pd
 import matplotlib.pyplot as plt
+import nltk
+
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+
 
 class Word:
     def __init__(self, word):
@@ -87,7 +92,7 @@ def textfile(name):
 def sorter(sorted_text, d, s):
     text_obj = []
     for i in sorted_text:
-        current_obj = Word(i)
+        current_obj = Word(lemmatizer.lemmatize(i))
         current_obj.word_add(d, s)
         text_obj.append(current_obj)
     return text_obj
@@ -120,6 +125,6 @@ def main():
     for i in data_frames:
         ax = i.plot.bar(x = "Words", y = "Frequency")
         plt.show()
-        print(i,"\n")
+        print(i, "\n")
 
 main()
