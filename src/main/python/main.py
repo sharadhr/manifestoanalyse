@@ -1,10 +1,58 @@
 import re as r
 import pandas as pd
 import matplotlib.pyplot as plt
-import nltk
-
+from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
+
 lemmatizer = WordNetLemmatizer()
+
+
+# CC coordinating conjunction
+# CD cardinal digit
+# DT determiner
+# EX existential there(like: “there is” … think of it like “there exists”)
+# FW foreign word
+# IN preposition/subordinating conjunction
+# JJ adjective ‘big’
+# JJR adjective, comparative ‘bigger’
+# JJS adjective, superlative ‘biggest’
+# LS list marker 1)
+# MD modal could, will
+# NN noun, singular ‘desk’
+# NNS noun plural ‘desks’
+# NNP proper noun, singular ‘Harrison’
+# NNPS proper noun, plural ‘Americans’
+# PDT predeterminer ‘all the kids’
+# POS possessive ending parent’s
+# PRP personal pronoun I, he, she
+# PRP$ possessive pronoun my, his, hers
+# RB adverb very, silently,
+# RBR adverb, comparative better
+# RBS adverb, superlative best
+# RP particle give up
+# TO, to go ‘to’ the store.
+# UH interjection, errrrrrrrm
+# VB verb, base form take
+# VBD verb, past tense took
+# VBG verb, gerund/present participle taking
+# VBN verb, past participle taken
+# VBP verb, sing. present, non-3d take
+# VBZ verb, 3rd person sing. present takes
+# WDT wh-determiner which
+# WP wh-pronoun who, what
+# WP$ possessive wh-pronoun whose
+# WRB wh-abverb where, when
+
+# 
+def get_wordnet_pos(word):
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"J": wordnet.ADJ,
+                "N": wordnet.NOUN,
+                "V": wordnet.VERB,
+                "R": wordnet.ADV}
+
+    return tag_dict.get(tag, wordnet.NOUN)
+
 
 
 class Word:
@@ -95,7 +143,7 @@ def textfile(name):
 def sorter(sorted_text, d, s):
     text_obj = []
     for i in sorted_text:
-        current_obj = Word(lemmatizer.lemmatize(i))
+        current_obj = Word(lemmatizer.lemmatize(i, "v"))
         current_obj.word_add(d, s)
         text_obj.append(current_obj)
     return text_obj
@@ -127,7 +175,7 @@ def main():
     data_frames = d_arrange(worddatabase)
     for i in data_frames:
         ax = i.plot.bar(x = "Words", y = "Frequency")
-        plt.show()
+        #plt.show()
         print(i, "\n")
 
-main()
+# main()
