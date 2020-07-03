@@ -8,17 +8,20 @@ class Word:
         self.wordtype = None
 
     def word_add(self, d, s): #d is dictionary of all words. s is list of words and word type
+        check = False
         text = self.word
-        if text not in s[0]:
-            if text in d:
-                d[text] += 1
-            else:
-                d[text] = 1
         for i in range(0, len(s[0])):
             current_data = s[0][i]
             if text in current_data:
                 current_data[text] += 1
                 self.type = s[1][i]
+                check = True
+        if text not in s[0] and check == False:
+            if text in d:
+                d[text] += 1
+            else:
+                d[text] = 1
+
     
     def showtype(self):
         return self.type
@@ -39,14 +42,14 @@ def pronoungen():
 
 def prepositiongen():
     d = {}
-    prep_list = ["in", "on", "at", "for", "by", "from", "with", "to", "about", "below", "over", "above"]
+    prep_list = ["in", "on", "at", "for", "by", "from", "with", "to", "about", "below", "over", "above", "of", "after"] 
     for i in prep_list:
         d[i] = 0
     return d
 
 def conjunctiongen():
     d = {}
-    con_list = ["and", "neither", "nor", "but", "either", "or", "yet", "so", "not only", "whether"]
+    con_list = ["and", "neither", "nor", "but", "either", "or", "yet", "so", "not only", "whether", "when"]
     for i in con_list:
         d[i] = 0
     return d
@@ -72,7 +75,7 @@ def keywordgen():
     "elderly", "eldercare", "poverty", "income", "tradeoff", "deficit",
     "stimulus", "invest", "investment", "invested", "population",
     "privelege", "mandate", "scheme", "monopoly", "retrenchment", 
-    "retrenched", "budget"]
+    "retrenched", "budget", "national", "government", "pap", "nsp", "wp", "psp", "sdp", "spp"]
     for i in keyword:
         d[i] = 0
     return d
