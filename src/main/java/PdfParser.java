@@ -60,19 +60,21 @@ public class PdfParser {
         try {
             Files.createFile(this.pdfStringsPath);
             return true;
-        }
-        catch (FileAlreadyExistsException e) {
+        } catch (FileAlreadyExistsException e) {
             System.err.println(e);
             System.out.println("File already exists.");
             return false;
-        }
-         catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e);
             System.out.println("File could not be created. Check permissions.");
             return false;
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getPdfStrings() {
         try {
             return new PDFTextStripper().getText(this.pdfDocument);
