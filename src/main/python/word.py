@@ -3,7 +3,8 @@ class Word:
         self.word = word
         self.wordtype = None
 
-    def word_add(self, text, d, s): #d is dictionary of all words. s is list of words and word type
+    def word_add(self, d, s): #d is dictionary of all words. s is list of words and word type
+        text = self.word
         if text in d:
             d[text] += 1
         else:
