@@ -185,18 +185,17 @@ def d_arrange(l):
     return out
 
 def main():
-    total_words = {}
-    worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
-    wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
-
+    #worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
+    #wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
     file_name = "nsp.txt"
     text_tags = read_textfile(file_name)
     word_obj = objectifier(text_tags)
     cat_words = get_wordcat(word_obj)
     freq_words = get_freq(cat_words)
-
-    worddatabase.append(total_words)
-    data_frames = d_arrange(worddatabase)
+    data_frames = []
+    for i in freq_words:
+        current_dict = freq_words[i]
+        data_frames.append(d_arrange(current_dict)) 
     # for i in data_frames:
     #     # ax = i.plot.bar(x = "Words", y = "Frequency")
     #     #plt.show()
