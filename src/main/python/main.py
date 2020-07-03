@@ -138,7 +138,7 @@ def get_wordcat(words):
         for j in range(0, len(id_list)):
             if i.get_type_s() == id_list[j]:
                 word_dict[description_list[j]].append(i)
-            print(word_dict)
+            print(word)
     return word_dict
 
 def get_freq(word_dicts):
