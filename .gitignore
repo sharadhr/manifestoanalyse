@@ -7,3 +7,5 @@ bin/
 .project
 */__pycache__/
 build/
+src/main/python/nsp.txt
+src/main/python/out.txt
