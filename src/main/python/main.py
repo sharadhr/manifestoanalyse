@@ -81,7 +81,7 @@ def get_freq(word_dicts):
 def arrangexy(d):
     x = []
     y = []
-    high = 15
+    high = 500
     n = 0
     for i in d:
         n += 1
@@ -134,13 +134,6 @@ def sort_words(party_dict):
     pron_df = pd.concat(pron)
     verb_df = pd.concat(verb)
     noun_df = pd.concat(noun)
-    #.sort_values(by="Frequency", ascending=True, inplace=True)
-    # word_cat_dict = {"Adjectives": adj_df.sort_values(by="Frequency"), 
-    # "Adverbs": adv_df.sort_values(by="Frequency"), 
-    # "Pronouns": pron_df.sort_values(by="Frequency"),
-    #  "Verbs": verb_df.sort_values(by="Frequency"), 
-    #  "Noun": noun_df.sort_values(by="Frequency")
-    #  }
     check = 0
     word_cat_dict = {"Adjectives": adj_df.sort_values(by="Frequency", ascending = check), 
     "Adverbs": adv_df.sort_values(by="Frequency", ascending = check), 
@@ -150,6 +143,21 @@ def sort_words(party_dict):
      }
     return word_cat_dict
 
+def concatenate_cats(d):
+    adj = []
+    adv = []
+    pron = []
+    verb = []
+    noun = []
+    out = [adj, adv, pron, verb, noun]
+    for i in d:
+        current_party = d[i]
+        index = 0
+        for j in current_party:
+            out[index].append(current_party[j])
+            index += 1
+    return out
+    
 #Add in multiparty comparison
 def main():
     file_name = ["nsp.txt", "pap.txt", "psp.txt", "wp.txt", "spp.txt"]
@@ -164,16 +172,17 @@ def main():
     for i in range(0 , len(all_df_list)):
         party_dict = all_df_list[i]
         sorted_dict[party_name[i][0]] = sort_words(party_dict)
-
+    
+    #test = concatenate_cats(sorted_dict)
     for i in sorted_dict:
         current_dict = sorted_dict[i]
         for j in current_dict:
             current_df = current_dict[j]
             if len(current_df) < 15:
-                ax = current_df.plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
+                ax = current_df.plot.bar(x="Words", y="Frequency", title = j + " used by "+i, fontsize = 8)
             else:
-                ax = current_df[:15].plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
-            ax.legend([i])
+                ax = current_df[:15].plot.bar(x="Words", y="Frequency", title = j + " used by "+i, fontsize = 8)
+            #ax.legend([i])
             plt.show()
 
 main()
