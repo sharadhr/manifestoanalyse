@@ -93,27 +93,33 @@ def arrangexy(d):
     out.sort_values(by="Frequency", ascending=False, inplace=True)
     return out
 
-#Add in multiparty comparison
-def main():
-    file_name = "nsp.txt"
-    # list of tuples containing the words contained in the text document along with their NLKT ID's
+def convert_to_dataframe(file_name):
     text_tags = read_textfile(file_name)
-    # list of word objects for the words obtained from the previous step
     word_obj = objectifier(text_tags)
-    # sorts the words into a dictionary with their correct categories
     cat_words = get_wordcat(word_obj)
-    # sorts the words by frequency and returns a dictionary
     freq_words = get_freq(cat_words)
+    dict_dataframe = {}
     for i in freq_words:
         current_dict = freq_words[i]
-        if len(current_dict)> 0:
-            # creates data frames for the frequency of words and the words
+        if len(current_dict) > 0:
             current_data_frame = arrangexy(current_dict)
-            #print(i, "\n")
-            #print(current_data_frame, "\n")
-            ax = current_data_frame.plot.bar(x="Words", y="Frequency", title = i[0])
-            plt.show()
+            dict_dataframe[i[0]] = current_data_frame
         else:
             continue
+    return dict_dataframe
+
+#Add in multiparty comparison
+def main():
+    file_name = ["nsp.txt"]
+    all_df_list = []
+    for i in file_name:
+        df_dict = convert_to_dataframe(i)
+        all_df_list.append(df_dict)
+    for i in range(0, len(all_df_list)):
+        party_dict = all_df_list[i]
+        for j in party_dict:
+            current_df = party_dict[j]
+            ax = current_df.plot.bar(x="Words", y="Frequency", title = j, fontsize = 8)
+            plt.show()
 
 main()
