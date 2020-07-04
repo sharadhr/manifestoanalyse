@@ -1,4 +1,3 @@
-import re as r
 import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
@@ -8,7 +7,6 @@ nltk.download('tagsets')
 nltk.download('wordnet')
 
 lemmatizer = nltk.stem.WordNetLemmatizer()
-
 
 def nltk_tagdict():
     tagdict = nltk.data.load('help/tagsets/upenn_tagset.pickle')
@@ -22,23 +20,6 @@ def nltk_tags(tagdict):
 
 def nltk_tag_explanations(tagdict):
     return tagdict.values()
-
-
-def get_wordnet_pos(words):
-    word_dict = {}
-    id_list = ["C", "D", "E", "F", "I", "J", "L",
-               "M", "N", "P", "R", "T", "U", "V", "W"]
-    description_list = ["Conjunction or Digit", "Determiner", "Existential there", "Foreign word",
-                        "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To",
-                        "Interjection", "Verb", "WH words"]
-    for i in description_list:
-        word_dict[i] = []
-    for i in words:
-        for j in range(0, len(id_list)):
-            if i.get_type_s == id_list[j]:
-                word_dict[description_list[j]].append(i)
-    return word_dict
-
 
 class Word:
     def __init__(self, word, id):
@@ -55,76 +36,12 @@ class Word:
     def get_word(self):
         return self.word
 
-
-def pronoungen():
-    d = {}
-    pronoun_list = ["i", "me", "mine", "myself",
-                    "you", "your", "yourself",
-                    "he", "him", "his", "himself",
-                    "she", "her", "hers", "herself",
-                    "it", "its", "itself",
-                    "we", "ours", "us", "our", "ourselves",
-                    "yourselves",
-                    "they", "them", "their", "theirs", "theirs", "themselves"]
-    for i in pronoun_list:
-        d[i] = 0
-    return d
-
-
-def prepositiongen():
-    d = {}
-    prep_list = ["in", "on", "at", "for", "by", "from", "with",
-                 "to", "about", "below", "over", "above", "of", "after"]
-    for i in prep_list:
-        d[i] = 0
-    return d
-
-
-def conjunctiongen():
-    d = {}
-    con_list = ["and", "neither", "nor", "but", "either",
-                "or", "yet", "so", "not only", "whether", "when"]
-    for i in con_list:
-        d[i] = 0
-    return d
-
-
-def quantifergen():
-    d = {}
-    quant = ["many", "few", "some", "every", "a lot", "any", "less", "fewer"]
-    for i in quant:
-        d[i] = 0
-    return d
-
-
-def articlegen():
-    d = {}
-    article = ["a", "an", "the", "whose", "all"]
-    for i in article:
-        d[i] = 0
-    return d
-
-
-def keywordgen():
-    d = {}
-    keyword = ["productivity", "enterprise", "gdp", "economy",
-               "mobility", "pmet", "jobs", "minimum wage", "cpf", "local", "singaporeans",
-               "elderly", "eldercare", "poverty", "income", "tradeoff", "deficit",
-               "stimulus", "invest", "investment", "invested", "population",
-               "privelege", "mandate", "scheme", "monopoly", "retrenchment",
-               "retrenched", "budget", "national", "government", "pap", "nsp", "wp", "psp", "sdp", "spp"]
-    for i in keyword:
-        d[i] = 0
-    return d
-
-
 def read_textfile(file_name):
     text_file = open(file_name, "r")
     text = text_file.read()
     text_file.close()
 
     return nltk.pos_tag(nltk.word_tokenize(text))
-
 
 def objectifier(text):
     out = []
@@ -133,7 +50,6 @@ def objectifier(text):
         id = text[i][1]
         out.append(Word(word, id))
     return out
-
 
 def get_wordcat(words):
     word_dict = {}
@@ -150,7 +66,6 @@ def get_wordcat(words):
                 word_dict[description_list[j]].append(i)
     return word_dict
 
-
 def get_freq(word_dicts):
     d = {}
     for i in word_dicts:
@@ -164,12 +79,10 @@ def get_freq(word_dicts):
         d[i] = temp
     return d
 
-
 def arrangexy(d):
     x = []
     y = []
     for i in d:
-        # print(i)
         x.append(i)
         y.append(d[i])
     out = pd.DataFrame({"Words": x, "Frequency": y})
@@ -178,8 +91,6 @@ def arrangexy(d):
 
 # See first few methods for nice formatting, built-in nltk processing, etc. 
 def main():
-    #worddatabase = [pronoungen(), prepositiongen(), conjunctiongen(), quantifergen(), articlegen(), keywordgen()]
-    #wordassignment = ["pronoun", "preposition", "conjunction", "quantifier", "article", "keyword"]
     file_name = "nsp.txt"
     # list of tuples containing the words contained in the text document along with their NLKT ID's
     text_tags = read_textfile(file_name)
@@ -189,15 +100,15 @@ def main():
     cat_words = get_wordcat(word_obj)
     # sorts the words by frequency and returns a dictionary
     freq_words = get_freq(cat_words)
-    data_frames = []
     for i in freq_words:
         current_dict = freq_words[i]
-        #print(current_dict, "\n")
-        # creates data frames for the frequency of words and the words
-        current_data_frame = arrangexy(current_dict)
-        data_frames.append(current_data_frame)
-        ax = current_data_frame.plot.bar(x="Words", y="Frequency")
-        plt.show()
+        if len(current_dict)> 0:
+            # creates data frames for the frequency of words and the words
+            current_data_frame = arrangexy(current_dict)
+            ax = current_data_frame.plot.bar(x="Words", y="Frequency", title = i)
+            plt.show()
+        else:
+            continue
 
 
 main()
