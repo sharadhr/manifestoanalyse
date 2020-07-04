@@ -81,7 +81,7 @@ def get_freq(word_dicts):
 def arrangexy(d):
     x = []
     y = []
-    high = 20
+    high = 15
     n = 0
     for i in d:
         n += 1
@@ -90,7 +90,7 @@ def arrangexy(d):
         if n == high:
             break
     out = pd.DataFrame({"Words": x, "Frequency": y})
-    out.sort_values(by="Frequency", ascending=False, inplace=True)
+    out.sort_values(by="Frequency", ascending=True, inplace=True)
     return out
 
 def convert_to_dataframe(file_name):
@@ -111,15 +111,18 @@ def convert_to_dataframe(file_name):
 #Add in multiparty comparison
 def main():
     file_name = ["nsp.txt"]
+    party_name = ["NSP"]
     all_df_list = []
     for i in file_name:
         df_dict = convert_to_dataframe(i)
         all_df_list.append(df_dict)
-    for i in range(0, len(all_df_list)):
+    total_words = [0]*len(file_name)
+    for i in range(0 , len(all_df_list)):
         party_dict = all_df_list[i]
         for j in party_dict:
             current_df = party_dict[j]
-            ax = current_df.plot.bar(x="Words", y="Frequency", title = j, fontsize = 8)
+            ax = current_df.plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
+            ax.legend(party_name)
             plt.show()
 
 main()
