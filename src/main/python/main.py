@@ -2,9 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
 
-nltk.download('popular')
-nltk.download('tagsets')
-nltk.download('wordnet')
+#nltk.download('popular')
+#nltk.download('tagsets')
+#nltk.download('wordnet')
 
 lemmatizer = nltk.stem.WordNetLemmatizer()
 
@@ -35,7 +35,7 @@ class Word:
         return self.word
 
 def read_textfile(file_name):
-    text_file = open(file_name, "r")
+    text_file = open(file_name, encoding = "utf-8")
     text = text_file.read()
     text_file.close()
 
@@ -108,21 +108,72 @@ def convert_to_dataframe(file_name):
             continue
     return dict_dataframe
 
+def sort_words(party_dict):
+    adj = []
+    adv = []
+    pron = []
+    verb = []
+    noun = []
+    for i in party_dict:
+        current_df = party_dict[i]
+        if "adjective" in i:
+            adj.append(current_df)
+        elif "adverb" in i:
+            adv.append(current_df)
+        elif "pronoun" in i:
+            pron.append(current_df)
+        elif "verb" in i:
+            verb.append(current_df)
+        elif "noun" in i:
+            if "pronoun" not in i:
+                noun.append(current_df)
+            else:
+                continue
+    adj_df = pd.concat(adj)
+    adv_df = pd.concat(adv)
+    pron_df = pd.concat(pron)
+    verb_df = pd.concat(verb)
+    noun_df = pd.concat(noun)
+    #.sort_values(by="Frequency", ascending=True, inplace=True)
+    # word_cat_dict = {"Adjectives": adj_df.sort_values(by="Frequency"), 
+    # "Adverbs": adv_df.sort_values(by="Frequency"), 
+    # "Pronouns": pron_df.sort_values(by="Frequency"),
+    #  "Verbs": verb_df.sort_values(by="Frequency"), 
+    #  "Noun": noun_df.sort_values(by="Frequency")
+    #  }
+    check = 0
+    word_cat_dict = {"Adjectives": adj_df.sort_values(by="Frequency", ascending = check), 
+    "Adverbs": adv_df.sort_values(by="Frequency", ascending = check), 
+    "Pronouns": pron_df.sort_values(by="Frequency", ascending = check),
+     "Verbs": verb_df.sort_values(by="Frequency", ascending = check), 
+     "Noun": noun_df.sort_values(by="Frequency", ascending = check)
+     }
+    return word_cat_dict
+
 #Add in multiparty comparison
 def main():
-    file_name = ["nsp.txt"]
-    party_name = ["NSP"]
+    file_name = ["nsp.txt", "pap.txt", "psp.txt", "wp.txt", "spp.txt"]
+    party_name = [["NSP"], ["PAP"], ["PSP"], ["WP"], ["SPP"]]
     all_df_list = []
+    sorted_dict = {}
+
     for i in file_name:
         df_dict = convert_to_dataframe(i)
         all_df_list.append(df_dict)
-    total_words = [0]*len(file_name)
+
     for i in range(0 , len(all_df_list)):
         party_dict = all_df_list[i]
-        for j in party_dict:
-            current_df = party_dict[j]
-            ax = current_df.plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
-            ax.legend(party_name)
+        sorted_dict[party_name[i][0]] = sort_words(party_dict)
+
+    for i in sorted_dict:
+        current_dict = sorted_dict[i]
+        for j in current_dict:
+            current_df = current_dict[j]
+            if len(current_df) < 15:
+                ax = current_df.plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
+            else:
+                ax = current_df[:15].plot.barh(x="Words", y="Frequency", title = j, fontsize = 8)
+            ax.legend([i])
             plt.show()
 
 main()
