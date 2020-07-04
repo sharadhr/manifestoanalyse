@@ -13,10 +13,8 @@ def nltk_tagdict():
     tagdict.values()
     return nltk.data.load('help/tagsets/upenn_tagset.pickle')
 
-
 def nltk_tags(tagdict):
     return tagdict.keys()
-
 
 def nltk_tag_explanations(tagdict):
     return tagdict.values()
@@ -53,16 +51,17 @@ def objectifier(text):
 
 def get_wordcat(words):
     word_dict = {}
-    id_list = ["C", "D", "E", "F", "I", "J", "L",
-               "M", "N", "P", "R", "T", "U", "V", "W"]
-    description_list = ["Conjunction or Digit", "Determiner", "Existential there", "Foreign word",
-                        "Preposition", "Adjective", "List marker", "Modal Noun", "Noun", "Pronoun", "Adverb", "To",
-                        "Interjection", "Verb", "WH words"]
+    tagdict = nltk_tagdict()
+    id_list = []
+    description_list = []
+    for i in tagdict:
+        id_list.append(i)
+        description_list.append(tagdict[i])
     for i in description_list:
         word_dict[i] = []
     for i in words:
         for j in range(0, len(id_list)):
-            if i.get_type_s() == id_list[j]:
+            if i.get_type_l() == id_list[j]:
                 word_dict[description_list[j]].append(i)
     return word_dict
 
@@ -82,14 +81,19 @@ def get_freq(word_dicts):
 def arrangexy(d):
     x = []
     y = []
+    high = 20
+    n = 0
     for i in d:
+        n += 1
         x.append(i)
         y.append(d[i])
+        if n == high:
+            break
     out = pd.DataFrame({"Words": x, "Frequency": y})
     out.sort_values(by="Frequency", ascending=False, inplace=True)
     return out
 
-# See first few methods for nice formatting, built-in nltk processing, etc. 
+#Add in multiparty comparison
 def main():
     file_name = "nsp.txt"
     # list of tuples containing the words contained in the text document along with their NLKT ID's
@@ -105,10 +109,11 @@ def main():
         if len(current_dict)> 0:
             # creates data frames for the frequency of words and the words
             current_data_frame = arrangexy(current_dict)
-            ax = current_data_frame.plot.bar(x="Words", y="Frequency", title = i)
+            #print(i, "\n")
+            #print(current_data_frame, "\n")
+            ax = current_data_frame.plot.bar(x="Words", y="Frequency", title = i[0])
             plt.show()
         else:
             continue
-
 
 main()
